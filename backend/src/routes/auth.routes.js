@@ -27,8 +27,8 @@ router.post("/refresh-token", refreshAccessToken);
 router.get("/google", googleAuth);
 router.get("/google/callback", googleCallback, handleOAuthCallback);
 
-// ─── GitHub OAuth (linking — user must be logged in) ─────────────────────────
-router.get("/github", verifyJWT, githubAuth);
+// ─── GitHub OAuth (sign in / sign up / link) ─────────────────────────────────
+router.get("/github", githubAuth);
 router.get("/github/callback", githubCallback, handleOAuthCallback);
 
 // ─── Session ─────────────────────────────────────────────────────────────────
