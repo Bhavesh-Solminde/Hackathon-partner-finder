@@ -24,6 +24,10 @@ const LoginPage = () => {
     window.location.href = "http://localhost:8080/api/v1/auth/google";
   };
 
+  const handleGithubLogin = () => {
+    window.location.href = "http://localhost:8080/api/v1/auth/github";
+  };
+
   return (
     <div className="min-h-screen bg-[#15171e] text-white flex items-center justify-center px-6 relative overflow-hidden">
       {/* Background Grid Pattern */}
@@ -100,8 +104,9 @@ const LoginPage = () => {
               <div className="h-px bg-[#2e333b] flex-1" />
             </div>
 
-            <div className="mt-6">
+            <div className="mt-6 flex flex-col gap-3">
               <OAuthButton provider="Google" onClick={handleGoogleLogin} />
+              <OAuthButton provider="GitHub" onClick={handleGithubLogin} />
             </div>
           </div>
           

@@ -48,14 +48,13 @@ const LandingPage = () => {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
         >
-          <button className="bg-[#0088cc] hover:bg-[#0077b3] text-white px-8 py-3.5 rounded font-medium transition-all shadow-[0_0_20px_-5px_rgba(0,136,204,0.5)] hover:shadow-[0_0_25px_-5px_rgba(0,136,204,0.6)] flex items-center justify-center gap-2">
+          <button
+            onClick={() => window.location.href = "http://localhost:8080/api/v1/auth/github"}
+            className="bg-[#0088cc] hover:bg-[#0077b3] text-white px-8 py-3.5 rounded font-medium transition-all shadow-[0_0_20px_-5px_rgba(0,136,204,0.5)] hover:shadow-[0_0_25px_-5px_rgba(0,136,204,0.6)] flex items-center justify-center gap-2">
             <Github className="w-5 h-5" />
             Continue with GitHub
           </button>
-          <button className="bg-[#1d2127] hover:bg-[#252a31] border border-[#2e333b] text-white px-8 py-3.5 rounded font-medium transition-colors flex items-center justify-center gap-2">
-            <Terminal className="w-5 h-5 text-zinc-400" />
-            View Live Demo
-          </button>
+
         </motion.div>
 
         {/* Mock User Cards Showcase */}

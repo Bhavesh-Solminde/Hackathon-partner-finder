@@ -246,7 +246,7 @@ export const githubAuth = passport.authenticate("github", {
 // ─── GitHub Callback: Handle the redirect from GitHub ────────────────────────
 export const githubCallback = passport.authenticate("github", {
   session: false,
-  failureRedirect: `${ENV.CORS_ORIGIN || "http://localhost:5173"}/dashboard?error=github_link_failed`,
+  failureRedirect: `${ENV.CORS_ORIGIN || "http://localhost:5173"}/login?error=github_failed`,
 });
 
 // ─── Get Current User ────────────────────────────────────────────────────────
