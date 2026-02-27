@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuthStore } from "../store/authStore";
 import { axiosInstance } from "../lib/axios";
-import { ShieldCheck, Github, Save, RefreshCw } from "lucide-react";
+import { ShieldCheck, Github, Save, RefreshCw, Unlink } from "lucide-react";
 import { motion } from "framer-motion";
 import Alert from "../components/Alert";
 
@@ -21,6 +21,7 @@ const ProfilePage = () => {
   
   const [isSaving, setIsSaving] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isUnlinking, setIsUnlinking] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
 
   const handleSaveProfile = async (e) => {
@@ -67,6 +68,21 @@ const ProfilePage = () => {
 
   const handleLinkGithub = () => {
     window.location.href = "http://localhost:8080/api/v1/auth/github";
+  };
+
+  const handleUnlinkGithub = async () => {
+    if (!window.confirm("Disconnect GitHub? This will remove all verified skills and reset your Trust Score.")) return;
+    setIsUnlinking(true);
+    setMessage({ type: "", text: "" });
+    try {
+      await axiosInstance.post("/users/unlink-github");
+      await checkAuth();
+      setMessage({ type: "success", text: "GitHub account disconnected successfully." });
+    } catch (error) {
+      setMessage({ type: "error", text: error.response?.data?.message || "Failed to disconnect GitHub." });
+    } finally {
+      setIsUnlinking(false);
+    }
   };
 
   if (!user) return null;
@@ -185,11 +201,20 @@ const ProfilePage = () => {
 
                   <button
                     onClick={handleSyncGithub}
-                    disabled={isSyncing}
-                    className="w-full bg-[#0088cc] hover:bg-[#0077b3] text-white py-2.5 rounded font-medium transition-colors flex items-center justify-center gap-2 disabled:opacity-50 mb-6"
+                    disabled={isSyncing || isUnlinking}
+                    className="w-full bg-[#0088cc] hover:bg-[#0077b3] text-white py-2.5 rounded font-medium transition-colors flex items-center justify-center gap-2 disabled:opacity-50 mb-3"
                   >
                     <RefreshCw className={`w-4 h-4 ${isSyncing ? "animate-spin" : ""}`} />
                     {isSyncing ? "Syncing Repos..." : "Sync GitHub Stats"}
+                  </button>
+
+                  <button
+                    onClick={handleUnlinkGithub}
+                    disabled={isUnlinking || isSyncing}
+                    className="w-full bg-transparent hover:bg-red-500/10 border border-[#2e333b] hover:border-red-500/50 text-zinc-400 hover:text-red-400 py-2.5 rounded font-medium transition-colors flex items-center justify-center gap-2 disabled:opacity-50 mb-6"
+                  >
+                    <Unlink className={`w-4 h-4 ${isUnlinking ? "animate-spin" : ""}`} />
+                    {isUnlinking ? "Disconnecting..." : "Disconnect GitHub"}
                   </button>
 
                   {user.lastSynced && (
