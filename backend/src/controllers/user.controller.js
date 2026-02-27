@@ -86,6 +86,42 @@ export const syncGithubStats = asyncHandler(async (req, res, next) => {
   );
 });
 
+// ─── Unlink GitHub Account ──────────────────────────────────────────────────
+export const unlinkGithub = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  if (!user.githubId) {
+    throw new ApiError(400, "GitHub account is not linked.");
+  }
+
+  // Clear all GitHub-related fields
+  user.githubId = undefined;
+  user.githubHandle = "";
+  user.githubAccessToken = undefined;
+  user.lastSynced = null;
+
+  // Wipe GitHub-sourced verified skills
+  user.skills = user.skills.filter((s) => s.source !== "GITHUB");
+
+  // Recalculate trust score (only manual/unverified skills remain)
+  const verifiedCount = user.skills.filter((s) => s.verified).length;
+  user.trustScore = verifiedCount * 10;
+
+  await user.save({ validateBeforeSave: false });
+
+  const updatedUser = await User.findById(user._id).select(
+    "-password -refreshToken -githubAccessToken"
+  );
+
+  res.status(200).json(
+    new ApiResponse(200, "GitHub account unlinked successfully.", updatedUser)
+  );
+});
+
 // ─── Get User by ID ─────────────────────────────────────────────────────────────
 export const getUserById = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.id).select(

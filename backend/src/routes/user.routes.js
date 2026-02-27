@@ -3,6 +3,7 @@ import {
   getProfile,
   updateProfile,
   syncGithubStats,
+  unlinkGithub,
   getUserById,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -18,6 +19,7 @@ router.put("/profile", updateProfile);
 
 // ─── GitHub Sync ────────────────────────────────────────────────────────────
 router.post("/sync", syncGithubStats);
+router.post("/unlink-github", unlinkGithub);
 
 // ─── Get User by ID ─────────────────────────────────────────────────────────
 router.get("/:id", getUserById);
